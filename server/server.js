@@ -32,3 +32,37 @@ boot(app, __dirname, function(err) {
   if (require.main === module)
     app.start();
 });
+
+app.models.user.find((err, result) => {
+  if (result.length === 0) {
+    const user = {
+      email: 'w@w.ww',
+      password: 'test',
+      username: 'waleed'
+    };
+    app.models.user.create(user, (err, result) => {
+      
+    });
+  }
+});
+
+app.models.user.afterRemote('create', (ctx, user, next) => {
+  console.log("new user", user);
+  app.models.Profile.create({
+    first_name: user.username,
+    created_at: new Date(),
+    userId: user.id
+  }, (error, result) => {
+    if (!error && result) {
+      console.log("created new profile", result);
+    } else {
+      console.log("there is an error", error);
+    }
+    next();
+  });
+  
+});
+
+app.middleware('auth', loopback.token({
+  model: app.models.customAccessToken
+}));
