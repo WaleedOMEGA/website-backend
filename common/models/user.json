@@ -29,6 +29,11 @@
       "type": "hasMany",
       "model": "post",
       "foreignkey": ""
+    },
+    "postImage":{
+      "type":"hasMany",
+      "model":"postImage",
+      "foriegnkey":""
     }
   },
   "acls": [],
