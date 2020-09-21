@@ -5,6 +5,7 @@
 
 'use strict';
 
+const {Role, Principal} = require('loopback');
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 
@@ -38,31 +39,60 @@ app.models.user.find((err, result) => {
     const user = {
       email: 'w@w.ww',
       password: 'test',
-      username: 'waleed'
+      username: 'waleed',
     };
     app.models.user.create(user, (err, result) => {
-      
+
     });
   }
 });
 
 app.models.user.afterRemote('create', (ctx, user, next) => {
-  console.log("new user", user);
+  console.log('new user', user);
   app.models.Profile.create({
     first_name: user.username,
     created_at: new Date(),
-    userId: user.id
+    userId: user.id,
   }, (error, result) => {
     if (!error && result) {
-      console.log("created new profile", result);
+      console.log('created new profile', result);
     } else {
-      console.log("there is an error", error);
+      console.log('there is an error', error);
     }
     next();
   });
-  
+});
+
+app.models.Role.find({where: {name: 'admin'}}, (err, role) => {
+  if (!err && role) {
+    console.log('no error role is', role);
+    if (role.length === 0) {
+      app.models.Role.create({
+        name: 'admin',
+      }, (err2, result) => {
+        if (!err2 && result) {
+          app.models.user.findOne((usererr, user) => {
+            if (!usererr && user) {
+              result.principals.create({
+                principalType: app.models.RoleMapping.USER,
+                principalId: user.id,
+              }, (err3, principal) => {
+                console.log('created principal', err3, principal);
+              });
+            }
+          });
+        }
+      });
+    }
+  }
+});
+
+app.models.Role.find({ where: { name: 'editor' } }, (err, roles) => {
+  if (!err && roles) {
+    
+  }
 });
 
 app.middleware('auth', loopback.token({
-  model: app.models.customAccessToken
+  model: app.models.customAccessToken,
 }));

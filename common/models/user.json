@@ -24,6 +24,11 @@
       "type": "hasMany",
       "model": "customAccessToken",
       "foreignkey": "userId"
+    },
+    "post": {
+      "type": "hasMany",
+      "model": "post",
+      "foreignkey": ""
     }
   },
   "acls": [],
