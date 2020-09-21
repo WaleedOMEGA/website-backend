@@ -30,6 +30,11 @@
       "type": "belongsTo",
       "model": "profile",
       "foreignKey": "profileId"
+    },
+    "category": {
+      "type": "belongsTo",
+      "model": "category",
+      "foreignKey": "categoryId"
     }
   },
   "acls": [
@@ -43,6 +48,12 @@
       "accessType": "WRITE",
       "principalType": "ROLE",
       "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "WRITE",
+      "principalType": "ROLE",
+      "principalId": "editor",
       "permission": "ALLOW"
     }
   ],
